@@ -1,2 +1,2 @@
-# liveness-mlkit-cordova
-Liveness detection using Google ML Kit in Cordova
+# facedetection-mlkit-cordova
+Face detection using Google ML Kit in Cordova
