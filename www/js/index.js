@@ -6,57 +6,89 @@ var app = {
     const y = cDivRect.top;
     const height = cDivRect.height;
     const width = cDivRect.width;
+    
+    var smiling = 0;
+    var eyeBlinking = 0;
+    var eulerYLeft = 0;
+    var eulerYRight = 0;
+    var eulerZUp = 0;
+    var eulerZDown = 0;
 
     const options = {
       x: x,
       y: y,
       width: width,
       height: height,
-      front: false,
+      front: true,
       cameraPixel:'640x480',
       minFaceSize: 0.5,
-      landmark:true,
-      classification:true,
-      contour: true,
-      faceTrack:false,
+      landmark: false,
+      classification: true,
+      contour: false,
+      faceTrack: false,
+      performance: false
     };
 
     const me = this;
     document.getElementById('startCameraButton').innerText = 'TAKE PICTURE';
 
     window.faceDetection.start(options, function(result){
-      //console.log('start' +JSON.stringify(result));
-
       const data = result.data;
       let htmlText = '';
       if(result.type == 'image'){
         document.getElementById('imageFrameTitle').innerHTML = 'Live frame information';
-
-        htmlText += '<li>InputImage size: ' + data.imageSize; +' </li>';
-        htmlText += '<li>FPS: ' + data.framesPerSecond +', Frame latency: ' + data.frameLatency +' </li>';
-        htmlText += '<li>Detector latency: ' + data.detectorLatency +' </li>';
+        
+        htmlText += '<li>smiling: ' + smiling + ' </li>';
+        htmlText += '<li>eyeBlinking: ' + eyeBlinking + ' </li>';
+        htmlText += '<li>eulerYLeft: ' + eulerYLeft + ' </li>';
+        htmlText += '<li>eulerYRight: ' + eulerYRight + ' </li>';
+        htmlText += '<li>eulerZUp: ' + eulerZUp + ' </li>';
+        htmlText += '<li>eulerZDown: ' + eulerZDown + ' </li>';
         document.getElementById('imageFrame').innerHTML = htmlText;
         return;
       }
 
       for(let i= 0; i < data.length; i++) {
-        //console.log('face=' + JSON.stringify(data[i]));
-        document.getElementById('faceFrameTitle').innerHTML = 'Detected faces information';
+        // const smiling = Number.parseFloat(data[i].smiling).toFixed(2);
+        // const leftEyeOpen = Number.parseFloat(data[i].leftEyeOpen).toFixed(2);
+        // const rightEyeOpen = Number.parseFloat(data[i].rightEyeOpen).toFixed(2);
 
-        const smiling = Number.parseFloat(data[i].smiling).toFixed(2);
-        const leftEyeOpen = Number.parseFloat(data[i].leftEyeOpen).toFixed(2);
-        const rightEyeOpen = Number.parseFloat(data[i].rightEyeOpen).toFixed(2);
+        // const eulerX = Number.parseFloat(data[i].eulerX).toFixed(2);
+        // const eulerY = Number.parseFloat(data[i].eulerY).toFixed(2);
+        // const eulerZ = Number.parseFloat(data[i].eulerZ).toFixed(2);
 
-        const eulerX = Number.parseFloat(data[i].eulerX).toFixed(2);
-        const eulerY = Number.parseFloat(data[i].eulerY).toFixed(2);
-        const eulerZ = Number.parseFloat(data[i].eulerZ).toFixed(2);
+        if(data[i].smiling > 0.75)
+        {
+          smiling++;
+        }
+        if(data[i].leftEyeOpen <= 0.3 && data[i].rightEyeOpen <= 0.3)
+        {
+          eyeBlinking++;
+        }
 
-        htmlText += '<li>Id: '+ data[i].id + ' </li>';
-        htmlText += '<li>Smiling: ' + smiling +' </li>';
-        htmlText += '<li>[EyeOpen]left/right: ' + leftEyeOpen +' / ' + rightEyeOpen +'</li>';
-        htmlText += '<li>[Euler]X/Y/Z: ' + eulerX + ' / ' + eulerY + ' / ' + eulerZ +'</li>';
-        htmlText += '<li>[Contour]points:' + JSON.stringify(data[i].points) +'</li>';
-        htmlText += '<br>';
+        if(data[i].eulerY <= -35)
+        {
+          eulerYRight++;
+        } 
+        else if(data[i].eulerY > 35)
+        {
+          eulerYLeft++;
+        }
+
+        if(data[i].eulerZ >= 5)
+        {
+          eulerZUp++;
+        }
+        else if(data[i].eulerZ <= -3)
+        {
+          eulerZDown++;
+        }
+
+        // htmlText += '<li>Id: '+ data[i].id + ' </li>';
+        // htmlText += '<li>Smiling: ' + smiling +' </li>';
+        // htmlText += '<li>[EyeOpen]left/right: ' + leftEyeOpen +' / ' + rightEyeOpen +'</li>';
+        // htmlText += '<li>[Euler]X/Y/Z: ' + eulerX + ' / ' + eulerY + ' / ' + eulerZ +'</li>';
+        // htmlText += '<br>';
       }
       document.getElementById('faceFrame').innerHTML = htmlText;
 
