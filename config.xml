@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="liveness.qncgreenwild.com" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>LivenessDetection</name>
+<widget id="facedetection.qncgreenwild.com" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>FaceDetection</name>
     <description>
-        Demonstration of liveness detection using Google ML Kit
+        Demonstration of face detection using Google ML Kit
     </description>
     <author email="dev@qnc.org" href="https://qnc.org">
         QNC Team
